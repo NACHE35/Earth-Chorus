@@ -1,0 +1,28 @@
+name: Build Earth Chorus (Windows)
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configuration
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Compilation
+        run: cmake --build build --config Release --parallel
+
+      - name: Archive le plugin
+        uses: actions/upload-artifact@v4
+        with:
+          name: EarthChorus-Windows
+          if-no-files-found: warn
+          path: |
+            build/EarthChorus_artefacts/Release/VST3
+            build/EarthChorus_artefacts/Release/Standalone
